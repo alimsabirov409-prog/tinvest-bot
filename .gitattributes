@@ -1,0 +1,3 @@
+# Force LF for shell scripts so bash on Linux runs them without carriage return (\r) errors
+*.sh text eol=lf
+*.py text eol=lf
