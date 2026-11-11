@@ -27,10 +27,8 @@
 Подключитесь к вашему VPS/VDS-серверу по SSH и выполните одну команду:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/main/install.sh | sudo bash
+curl -sSL https://raw.githubusercontent.com/alimsabirov409-prog/tinvest-bot/main/install.sh | sudo bash
 ```
-
-> 💡 **Замените** `YOUR_GITHUB_USERNAME/YOUR_REPO_NAME` на путь к вашему репозиторию на GitHub.
 
 Скрипт автоматически:
 1. Установит необходимые пакеты ОС (`python3`, `pip`, `git`, `curl`).
@@ -43,7 +41,7 @@ curl -sSL https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/
 Если вы хотите передать переменные сразу:
 
 ```bash
-sudo TELEGRAM_TOKEN="ВАШ_ТЕЛЕГРАМ_ТОКЕН" ADMIN_ID="ВАШ_АДМИН_ID" bash <(curl -sSL https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/main/install.sh)
+sudo TELEGRAM_TOKEN="ВАШ_ТЕЛЕГРАМ_ТОКЕН" ADMIN_ID="ВАШ_АДМИН_ID" bash <(curl -sSL https://raw.githubusercontent.com/alimsabirov409-prog/tinvest-bot/main/install.sh)
 ```
 
 ---
@@ -111,8 +109,8 @@ sudo systemctl restart tinvestbot
 
 1. Склонируйте репозиторий:
    ```bash
-   git clone https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME.git
-   cd YOUR_REPO_NAME
+   git clone https://github.com/alimsabirov409-prog/tinvest-bot.git
+   cd tinvest-bot
    ```
 2. Создайте виртуальное окружение:
    ```bash

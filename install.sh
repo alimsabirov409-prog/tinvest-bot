@@ -6,8 +6,9 @@ set -e
 # ==========================================
 APP_DIR="/opt/tinvest_bot"
 SERVICE_NAME="tinvestbot"
-DEFAULT_REPO_URL="https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME.git"
+DEFAULT_REPO_URL="https://github.com/alimsabirov409-prog/tinvest-bot.git"
 REPO_URL="${REPO_URL:-$DEFAULT_REPO_URL}"
+RAW_BASE_URL="${RAW_BASE_URL:-https://raw.githubusercontent.com/alimsabirov409-prog/tinvest-bot/main}"
 
 # Цвета для вывода в терминал
 GREEN='\033[0;32m'
@@ -72,23 +73,17 @@ if [ -n "$SCRIPT_DIR" ] && [ -f "$SCRIPT_DIR/invest_bot.py" ] && [ "$SCRIPT_DIR"
     cp "$SCRIPT_DIR"/.env* "$APP_DIR"/ 2>/dev/null || true
 elif [ ! -f "$APP_DIR/invest_bot.py" ]; then
     # Если запущен через curl | bash на чистом сервере
-    if [[ "$REPO_URL" == *"YOUR_GITHUB_USERNAME"* ]]; then
-        echo -e "${YELLOW}Внимание: REPO_URL не настроен. Скачиваю файлы бота напрямую...${NC}"
-    fi
+    echo "Загрузка файлов репозитория..."
     mkdir -p "$APP_DIR"
-    if [ -n "$RAW_BASE_URL" ]; then
+    TMP_CLONE="/tmp/tinvest_clone_$$"
+    rm -rf "$TMP_CLONE"
+    if git clone --depth 1 "$REPO_URL" "$TMP_CLONE" 2>/dev/null; then
+        cp -r "$TMP_CLONE"/* "$APP_DIR"/
+        rm -rf "$TMP_CLONE"
+    else
+        echo -e "${YELLOW}git clone не удался, скачиваю файлы через curl...${NC}"
         curl -sSL "$RAW_BASE_URL/invest_bot.py" -o "$APP_DIR/invest_bot.py"
         curl -sSL "$RAW_BASE_URL/requirements.txt" -o "$APP_DIR/requirements.txt"
-    else
-        # Клонируем репозиторий во временную папку или сразу в целевую
-        TMP_CLONE="/tmp/tinvest_clone_$$"
-        rm -rf "$TMP_CLONE"
-        if git clone --depth 1 "$REPO_URL" "$TMP_CLONE" 2>/dev/null; then
-            cp -r "$TMP_CLONE"/* "$APP_DIR"/
-            rm -rf "$TMP_CLONE"
-        else
-            echo -e "${YELLOW}Не удалось клонировать по git. Убедитесь, что репозиторий публичный или REPO_URL указан верно.${NC}"
-        fi
     fi
 fi
 
