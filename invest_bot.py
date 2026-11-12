@@ -7,8 +7,12 @@ from datetime import timedelta
 from typing import Any, Awaitable, Callable, Dict
 import aiohttp
 from dotenv import load_dotenv, set_key
-from t_tech.invest import AsyncClient, InstrumentIdType
-from t_tech.invest.utils import now
+try:
+    from t_tech.invest import AsyncClient, InstrumentIdType
+    from t_tech.invest.utils import now
+except ImportError:
+    from tinkoff.invest import AsyncClient, InstrumentIdType
+    from tinkoff.invest.utils import now
 from aiogram import Bot, Dispatcher, F, BaseMiddleware
 from aiogram.filters import Command
 from aiogram.types import Message, TelegramObject
