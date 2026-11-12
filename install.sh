@@ -93,10 +93,17 @@ fi
 "$APP_DIR/venv/bin/pip" install --quiet --upgrade pip setuptools wheel
 
 echo -e "${GREEN}[4/6] Установка Python-зависимостей...${NC}"
+TBANK_INDEX="https://opensource.tbank.ru/api/v4/projects/238/packages/pypi/simple"
 if [ -f "$APP_DIR/requirements.txt" ]; then
-    "$APP_DIR/venv/bin/pip" install --quiet -r "$APP_DIR/requirements.txt"
+    "$APP_DIR/venv/bin/pip" install --quiet \
+        --extra-index-url "$TBANK_INDEX" \
+        --trusted-host opensource.tbank.ru \
+        -r "$APP_DIR/requirements.txt"
 else
-    "$APP_DIR/venv/bin/pip" install --quiet git+https://github.com/Tinkoff/invest-python.git aiogram>=3.0.0 aiohttp python-dotenv cryptography
+    "$APP_DIR/venv/bin/pip" install --quiet \
+        --extra-index-url "$TBANK_INDEX" \
+        --trusted-host opensource.tbank.ru \
+        t-tech-investments aiogram>=3.0.0 aiohttp python-dotenv cryptography
 fi
 
 echo -e "${GREEN}[5/6] Генерация и сохранение конфигурации .env...${NC}"
