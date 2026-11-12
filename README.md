@@ -94,13 +94,10 @@ sudo TELEGRAM_TOKEN="ВАШ_ТЕЛЕГРАМ_ТОКЕН" ADMIN_ID="ВАШ_АДМ
 
 ## 🔄 Как обновить бота на сервере
 
-Чтобы обновить бота до последней версии с GitHub:
+Чтобы обновить бота до последней версии с GitHub (в 1 команду без паролей и авторизаций):
 
 ```bash
-cd /opt/tinvest_bot
-sudo git pull
-sudo ./venv/bin/pip install --upgrade -r requirements.txt
-sudo systemctl restart tinvestbot
+sudo curl -sSL https://raw.githubusercontent.com/alimsabirov409-prog/tinvest-bot/main/invest_bot.py -o /opt/tinvest_bot/invest_bot.py && sudo systemctl restart tinvestbot
 ```
 
 ---

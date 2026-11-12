@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 set -e
 
+# Отключаем интерактивные запросы логина/пароля в git
+export GIT_TERMINAL_PROMPT=0
+
 # ==========================================
 # Конфигурация по умолчанию
 # ==========================================
 APP_DIR="/opt/tinvest_bot"
 SERVICE_NAME="tinvestbot"
-DEFAULT_REPO_URL="https://github.com/alimsabirov409-prog/tinvest-bot.git"
-REPO_URL="${REPO_URL:-$DEFAULT_REPO_URL}"
-RAW_BASE_URL="${RAW_BASE_URL:-https://raw.githubusercontent.com/alimsabirov409-prog/tinvest-bot/main}"
+RAW_BASE_URL="https://raw.githubusercontent.com/alimsabirov409-prog/tinvest-bot/main"
 
 # Цвета для вывода в терминал
 GREEN='\033[0;32m'
@@ -63,28 +64,19 @@ apt-get update -qq
 apt-get install -y -qq python3 python3-venv python3-pip git curl
 
 echo -e "${GREEN}[2/6] Подготовка директории приложения: ${APP_DIR}...${NC}"
+mkdir -p "$APP_DIR"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd || true)"
 
-# Если скрипт запущен внутри папки с кодом проекта
+# Если скрипт запущен локально внутри папки с ботом
 if [ -n "$SCRIPT_DIR" ] && [ -f "$SCRIPT_DIR/invest_bot.py" ] && [ "$SCRIPT_DIR" != "$APP_DIR" ]; then
     echo "Копирование исходных файлов из текущей папки в $APP_DIR..."
-    mkdir -p "$APP_DIR"
     cp -r "$SCRIPT_DIR"/* "$APP_DIR"/ 2>/dev/null || true
     cp "$SCRIPT_DIR"/.env* "$APP_DIR"/ 2>/dev/null || true
-elif [ ! -f "$APP_DIR/invest_bot.py" ]; then
-    # Если запущен через curl | bash на чистом сервере
-    echo "Загрузка файлов репозитория..."
-    mkdir -p "$APP_DIR"
-    TMP_CLONE="/tmp/tinvest_clone_$$"
-    rm -rf "$TMP_CLONE"
-    if git clone --depth 1 "$REPO_URL" "$TMP_CLONE" 2>/dev/null; then
-        cp -r "$TMP_CLONE"/* "$APP_DIR"/
-        rm -rf "$TMP_CLONE"
-    else
-        echo -e "${YELLOW}git clone не удался, скачиваю файлы через curl...${NC}"
-        curl -sSL "$RAW_BASE_URL/invest_bot.py" -o "$APP_DIR/invest_bot.py"
-        curl -sSL "$RAW_BASE_URL/requirements.txt" -o "$APP_DIR/requirements.txt"
-    fi
+else
+    # Запуск через curl ... | bash на чистом сервере — прямое скачивание без git и авторизаций
+    echo "Скачивание файлов бота напрямую с GitHub..."
+    curl -f -sSL "$RAW_BASE_URL/invest_bot.py" -o "$APP_DIR/invest_bot.py"
+    curl -f -sSL "$RAW_BASE_URL/requirements.txt" -o "$APP_DIR/requirements.txt"
 fi
 
 cd "$APP_DIR"
